@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>GT Vision C-Mount Calculator</title>
+
+<style>
+
+:root{
+    --gt-red:#BB2C2D;
+    --gt-red-dark:#992223;
+    --good:#2E8B57;
+    --warning:#F4A000;
+    --bad:#BB2C2D;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f7fb;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.1);
+}
+
+.header{
+    background:var(--gt-red);
+    color:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+.header h1{
+    margin:0;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:6px;
+}
+
+select{
+    width:100%;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ddd;
+}
+
+button{
+    margin-top:20px;
+    padding:12px 20px;
+    background:var(--gt-red);
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+#results{
+    margin-top:20px;
+    background:#FFF5F5;
+    border-left:5px solid var(--gt-red);
+    padding:20px;
+    border-radius:8px;
+}
+
+#overlay{
+    max-width:700px;
+    margin:20px auto;
+}
+
+#overlay svg{
+    width:100%;
+    height:auto;
+}
+
+.status{
+    padding:12px;
+    border-radius:8px;
+    text-align:center;
+    font-weight:bold;
+    margin:15px 0;
+}
+
+.good{
+    background:#EAF7EF;
+    border:2px solid var(--good);
+    color:var(--good);
+}
+
+.warning{
+    background:#FFF7E6;
+    border:2px solid var(--warning);
+    color:var(--warning);
+}
+
+.bad{
+    background:#FCEAEA;
+    border:2px solid var(--bad);
+    color:var(--bad);
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>GT Vision C-Mount Calculator</h1>
+<p>Sensor Matching • Adapter Selection • Optical Coverage</p>
+</div>
+
+<div class="grid">
+
+<div>
+<label>Field Number (FN)</label>
+<select id="fn">
+<option value="20">FN20</option>
+<option value="22" selected>FN22</option>
+<option value="26.5">FN26.5</option>
+<option value="30">FN30</option>
+</select>
+</div>
+
+<div>
+<label>Camera Sensor</label>
+<select id="sensor">
+<option value="6.0,4.5">1/3"</option>
+<option value="6.4,4.8">1/2"</option>
+<option value="8.8,6.6" selected>2/3"</option>
+<option value="13.2,8.8">1"</option>
+<option value="17.3,13">Micro Four Thirds</option>
+<option value="23.5,15.6">APS-C</option>
+<option value="36,24">Full Frame</option>
+</select>
+</div>
+
+<div>
+<label>Objective</label>
+<select id="objective">
+<option value="4">4x</option>
+<option value="10" selected>10x</option>
+<option value="20">20x</option>
+<option value="40">40x</option>
+<option value="60">60x</option>
+<option value="100">100x</option>
+</select>
+</div>
+
+<div>
+<label>C-Mount Adapter</label>
+<select id="adapter">
+<option value="0.35">0.35x</option>
+<option value="0.5" selected>0.5x</option>
+<option value="0.63">0.63x</option>
+<option value="0.7">0.7x</option>
+<option value="1">1.0x</option>
+</select>
+</div>
+
+</div>
+
+<button onclick="calculate()">
+Calculate
+</button>
+
+<div id="results"></div>
+<div id="overlay"></div>
+
+</div>
+
+<script>
+
+function calculate(){
+
+    const fn =
+        Number(document.getElementById("fn").value);
+
+    const objective =
+        Number(document.getElementById("objective").value);
+
+    const adapter =
+        Number(document.getElementById("adapter").value);
+
+    const sensor =
+        document.getElementById("sensor").value.split(",");
+
+    const sensorWidth =
+        Number(sensor[0]);
+
+    const sensorHeight =
+        Number(sensor[1]);
+
+    const diagonal =
+        Math.sqrt(
+            sensorWidth ** 2 +
+            sensorHeight ** 2
+        );
+
+    const imageCircle =
+        fn * adapter;
+
+    const coverage =
+        (diagonal / imageCircle) * 100;
+
+    const effectiveMag =
+        objective * adapter;
+
+    let status = "";
+    let css = "";
+    let colour = "";
+
+    if (coverage >= 95 && coverage <= 105){
+
+        status = "Recommended";
+        css = "good";
+        colour = "#2E8B57";
+
+    }
+    else if(
+        (coverage >= 85 && coverage < 95) ||
+        (coverage > 105 && coverage <= 115)
+    ){
+
+        status = "Borderline";
+        css = "warning";
+        colour = "#F4A000";
+
+    }
+    else{
+
+        status = "Not Recommended";
+        css = "bad";
+        colour = "#BB2C2D";
+    }
+
+    document.getElementById("results").innerHTML = `
+
+        <h2>Results</h2>
+
+        <div class="status ${css}">
+            ${status}
+        </div>
+
+        <p><strong>Coverage Match:</strong>
+        ${coverage.toFixed(1)}%</p>
+
+        <p><strong>Image Circle:</strong>
+        ${imageCircle.toFixed(2)} mm</p>
+
+        <p><strong>Sensor Diagonal:</strong>
+        ${diagonal.toFixed(2)} mm</p>
+
+        <p><strong>Effective Magnification:</strong>
+        ${effectiveMag.toFixed(1)}x</p>
+
+    `;
+
+    drawOverlay(
+        imageCircle,
+        sensorWidth,
+        
