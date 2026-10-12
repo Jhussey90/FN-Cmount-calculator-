@@ -45,4 +45,277 @@ input {
 
 button {
     width: 100%;
-    margin-top: 20px
+    margin-top: 20px;
+    padding: 12px;
+    background: #00A3E0;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0088be;
+}
+
+.result {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 8px;
+    font-size: 17px;
+}
+
+.light {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 8px;
+    border: 1px solid #666;
+    vertical-align: middle;
+}
+
+.diagram {
+    text-align: center;
+    margin-top: 25px;
+}
+
+svg {
+    max-width: 320px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>GT Vision Sensor → C-Mount → Objective Calculator</h1>
+
+<label>Sensor</label>
+<select id="sensor" onchange="updateSensor()">
+    <option value="4.8,3.6">1/3" Sensor</option>
+    <option value="6.4,4.8">1/2" Sensor</option>
+    <option value="8.8,6.6">2/3" Sensor</option>
+    <option value="12.8,9.6">1" Sensor</option>
+    <option value="8.45,7.07">Sony IMX264</option>
+    <option value="8.45,7.07">Sony IMX265</option>
+    <option value="11.3,7.1">Sony IMX250</option>
+    <option value="13.2,8.8">Sony IMX253</option>
+    <option value="15.86,13.28">Sony IMX183</option>
+    <option value="23.5,15.6">APS-C</option>
+    <option value="36,24">Full Frame</option>
+    <option value="custom">Custom Sensor</option>
+</select>
+
+<label>Sensor Width (mm)</label>
+<input type="number" id="sensorWidth" step="0.01">
+
+<label>Sensor Height (mm)</label>
+<input type="number" id="sensorHeight" step="0.01">
+
+<label>C-Mount Adapter</label>
+<select id="cmount">
+    <option value="1">1× C-Mount</option>
+    <option value="0.75">0.75× C-Mount</option>
+    <option value="0.7">0.7× C-Mount</option>
+    <option value="0.63" selected>0.63× C-Mount</option>
+    <option value="0.5">0.5× C-Mount</option>
+    <option value="0.35">0.35× Large Format</option>
+    <option value="0">Direct Projection</option>
+</select>
+
+<label>Objective Magnification</label>
+<select id="objective">
+    <option value="0.5">0.5×</option>
+    <option value="1">1×</option>
+    <option value="2" selected>2×</option>
+    <option value="5">5×</option>
+    <option value="10">10×</option>
+    <option value="20">20×</option>
+    <option value="40">40×</option>
+    <option value="60">60×</option>
+    <option value="100">100×</option>
+</select>
+
+<button onclick="calculate()">Calculate</button>
+
+<div id="result" class="result">
+Choose a sensor, C-mount and objective, then press Calculate.
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 300 300">
+
+    <circle id="fieldCircle"
+        cx="150"
+        cy="150"
+        r="120"
+        fill="#d9f2ff"
+        stroke="#00A3E0"
+        stroke-width="3"/>
+
+    <rect id="sensorRect"
+        x="100"
+        y="110"
+        width="100"
+        height="80"
+        fill="rgba(255,0,0,0.35)"
+        stroke="#cc0000"
+        stroke-width="2"/>
+
+</svg>
+</div>
+
+</div>
+
+<script>
+
+function updateSensor() {
+
+    const sensor = document.getElementById("sensor").value;
+
+    if (sensor === "custom") {
+        document.getElementById("sensorWidth").value = "";
+        document.getElementById("sensorHeight").value = "";
+        return;
+    }
+
+    const dims = sensor.split(",");
+
+    document.getElementById("sensorWidth").value = dims[0];
+    document.getElementById("sensorHeight").value = dims[1];
+}
+
+function calculate() {
+
+    const width =
+        parseFloat(document.getElementById("sensorWidth").value);
+
+    const height =
+        parseFloat(document.getElementById("sensorHeight").value);
+
+    const objective =
+        parseFloat(document.getElementById("objective").value);
+
+    const cMountFactor =
+        parseFloat(document.getElementById("cmount").value);
+
+    const cMountText =
+        document.getElementById("cmount").options[
+        document.getElementById("cmount").selectedIndex
+        ].text;
+
+    if (!width || !height || !objective) {
+        alert("Please enter valid values.");
+        return;
+    }
+
+    const sensorDiagonal =
+        Math.sqrt(width * width + height * height);
+
+    const fieldNumber = 22;
+
+    let imageCircle;
+
+    if (cMountFactor === 0) {
+        imageCircle = fieldNumber / objective;
+    } else {
+        imageCircle = (fieldNumber / objective) * cMountFactor;
+    }
+
+    const coverage =
+        (sensorDiagonal / imageCircle) * 100;
+
+    let status;
+    let colour;
+    let fitMessage;
+
+    if (coverage < 60) {
+        status = "Sensor Undersized";
+        fitMessage = "Adapter not fully utilised";
+        colour = "orange";
+    }
+    else if (coverage <= 95) {
+        status = "Optimal";
+        fitMessage = "Good optical match";
+        colour = "green";
+    }
+    else {
+        status = "Vignetting Risk";
+        fitMessage = "Sensor may exceed image circle";
+        colour = "red";
+    }
+
+    let objectiveRecommendation;
+
+    if (sensorDiagonal < 8)
+        objectiveRecommendation = "2× Objective";
+    else if (sensorDiagonal < 12)
+        objectiveRecommendation = "5× Objective";
+    else if (sensorDiagonal < 18)
+        objectiveRecommendation = "10× Objective";
+    else if (sensorDiagonal < 30)
+        objectiveRecommendation = "20× Objective";
+    else
+        objectiveRecommendation = "Telecentric Lens";
+
+    document.getElementById("result").innerHTML = `
+        <strong>Sensor Diagonal:</strong> ${sensorDiagonal.toFixed(2)} mm<br><br>
+
+        <strong>Effective Image Circle:</strong> ${imageCircle.toFixed(2)} mm<br><br>
+
+        <strong>Coverage:</strong> ${coverage.toFixed(1)} %<br><br>
+
+        <strong>Selected C-Mount:</strong> ${cMountText}<br><br>
+
+        <strong>C-Mount Assessment:</strong> ${fitMessage}<br><br>
+
+        <strong>Recommended Objective:</strong> ${objectiveRecommendation}<br><br>
+
+        <strong>Status:</strong> ${status}
+        <span class="light" style="background:${colour};"></span>
+    `;
+
+    drawSensor(width, height);
+}
+
+function drawSensor(width, height) {
+
+    const rect = document.getElementById("sensorRect");
+
+    const scale = 5;
+
+    let displayWidth = width * scale;
+    let displayHeight = height * scale;
+
+    if (displayWidth > 220) {
+
+        const factor = 220 / displayWidth;
+
+        displayWidth *= factor;
+        displayHeight *= factor;
+    }
+
+    rect.setAttribute("width", displayWidth);
+    rect.setAttribute("height", displayHeight);
+
+    rect.setAttribute(
+        "x",
+        150 - displayWidth / 2
+    );
+
+    rect.setAttribute(
+        "y",
+        150 - displayHeight / 2
+    );
+}
+
+updateSensor();
+
+</script>
+
+</body>
+</html>
