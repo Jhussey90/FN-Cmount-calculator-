@@ -3,13 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GT Vision Microscopy Compatibility Calculator</title>
+<title>GT Vision Sensor, C-Mount & Objective Calculator</title>
 
 <style>
 :root{
     --gt-red:#BA2B2B;
     --gt-red-dark:#9F2323;
+    --gt-red-light:#D45050;
+    --gt-white:#FFFFFF;
     --gt-bg:#F2F2F2;
+    --gt-grey:#666666;
     --gt-black:#333333;
 }
 
@@ -18,44 +21,48 @@
 }
 
 body{
-    margin:0;
-    padding:30px;
+    font-family:"Segoe UI",Arial,sans-serif;
     background:var(--gt-bg);
-    font-family:Segoe UI,Arial,sans-serif;
+    padding:30px;
     color:var(--gt-black);
+    margin:0;
 }
 
 .container{
-    max-width:950px;
+    max-width:900px;
     margin:auto;
     background:white;
     padding:30px;
     border-radius:14px;
-    border-top:8px solid var(--gt-red);
     box-shadow:0 8px 24px rgba(0,0,0,0.12);
+    border-top:8px solid var(--gt-red);
 }
 
 .logo{
     text-align:center;
+    margin-bottom:15px;
 }
 
 .logo h1{
-    margin:0;
     font-size:48px;
-    font-weight:800;
+    margin:0;
     color:var(--gt-red);
+    font-weight:800;
+    letter-spacing:2px;
 }
 
 .logo span{
     border:4px solid var(--gt-red);
     border-radius:10px;
     padding:0 10px;
+    margin-right:6px;
+    display:inline-block;
 }
 
 .subtitle{
     text-align:center;
-    color:#777;
-    margin:10px 0 30px;
+    color:var(--gt-grey);
+    margin-bottom:25px;
 }
 
 .grid{
@@ -64,7 +71,7 @@ body{
     gap:15px;
 }
 
-@media(max-width:750px){
+@media(max-width:700px){
     .grid{
         grid-template-columns:1fr;
     }
@@ -77,29 +84,34 @@ label{
     font-weight:600;
 }
 
-select,input{
+select,
+input{
     width:100%;
     padding:10px;
+    border:2px solid #dddddd;
     border-radius:8px;
-    border:2px solid #ddd;
+    transition:0.2s;
 }
 
-select:focus,input:focus{
+select:focus,
+input:focus{
     outline:none;
     border-color:var(--gt-red);
+    box-shadow:0 0 8px rgba(186,43,43,0.2);
 }
 
 button{
     width:100%;
     margin-top:25px;
     padding:14px;
-    background:var(--gt-red);
-    color:white;
     border:none;
     border-radius:8px;
+    background:var(--gt-red);
+    color:white;
     font-size:16px;
     font-weight:600;
     cursor:pointer;
+    transition:0.2s;
 }
 
 button:hover{
@@ -110,9 +122,17 @@ button:hover{
     margin-top:25px;
     background:#fafafa;
     border-left:6px solid var(--gt-red);
-    padding:20px;
     border-radius:10px;
-    line-height:1.8;
+    padding:20px;
+    line-height:1.9;
+}
+
+.diagram{
+    text-align:center;
+    margin-top:30px;
+    padding:15px;
+    background:#fafafa;
+    border-radius:10px;
 }
 
 .light{
@@ -121,30 +141,33 @@ button:hover{
     border-radius:50%;
     display:inline-block;
     margin-left:8px;
-    border:1px solid #888;
+    border:1px solid #999;
     vertical-align:middle;
 }
 
-.diagram{
+.footer{
     text-align:center;
-    margin-top:30px;
+    margin-top:20px;
+    color:var(--gt-grey);
+    font-size:12px;
 }
 
 svg{
-    max-width:350px;
+    max-width:320px;
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
 
 <div class="logo">
-<h1><span>GT</span>VISION</h1>
+    <h1><span>GT</span>VISION</h1>
 </div>
 
 <div class="subtitle">
-Microscope Camera • C-Mount • Objective Compatibility Calculator
+    Sensor • C-Mount • Objective Compatibility Calculator
 </div>
 
 <div class="grid">
@@ -152,33 +175,33 @@ Microscope Camera • C-Mount • Objective Compatibility Calculator
 <div>
 <label>Sensor</label>
 <select id="sensor" onchange="updateSensor()">
-<option value="4.8,3.6">1/3" Sensor</option>
-<option value="6.4,4.8">1/2" Sensor</option>
-<option value="8.8,6.6">2/3" Sensor</option>
-<option value="12.8,9.6">1" Sensor</option>
-<option value="8.45,7.07">Sony IMX264</option>
-<option value="8.45,7.07">Sony IMX265</option>
-<option value="11.3,7.1">Sony IMX250</option>
-<option value="13.2,8.8">Sony IMX253</option>
-<option value="15.86,13.28">Sony IMX183</option>
-<option value="23.5,15.6">APS-C</option>
-<option value="36,24">Full Frame</option>
-<option value="custom">Custom Sensor</option>
+    <option value="4.8,3.6">1/3" Sensor</option>
+    <option value="6.4,4.8">1/2" Sensor</option>
+    <option value="8.8,6.6">2/3" Sensor</option>
+    <option value="12.8,9.6">1" Sensor</option>
+    <option value="8.45,7.07">Sony IMX264</option>
+    <option value="8.45,7.07">Sony IMX265</option>
+    <option value="11.3,7.1">Sony IMX250</option>
+    <option value="13.2,8.8">Sony IMX253</option>
+    <option value="15.86,13.28">Sony IMX183</option>
+    <option value="23.5,15.6">APS-C</option>
+    <option value="36,24">Full Frame</option>
+    <option value="custom">Custom Sensor</option>
 </select>
 </div>
 
 <div>
 <label>Objective Magnification</label>
 <select id="objective">
-<option value="0.5">0.5×</option>
-<option value="1">1×</option>
-<option value="2" selected>2×</option>
-<option value="5">5×</option>
-<option value="10">10×</option>
-<option value="20">20×</option>
-<option value="40">40×</option>
-<option value="60">60×</option>
-<option value="100">100×</option>
+    <option value="0.5">0.5×</option>
+    <option value="1">1×</option>
+    <option value="2" selected>2×</option>
+    <option value="5">5×</option>
+    <option value="10">10×</option>
+    <option value="20">20×</option>
+    <option value="40">40×</option>
+    <option value="60">60×</option>
+    <option value="100">100×</option>
 </select>
 </div>
 
@@ -195,19 +218,14 @@ Microscope Camera • C-Mount • Objective Compatibility Calculator
 <div>
 <label>C-Mount Adapter</label>
 <select id="cmount">
-<option value="1">1× C-Mount</option>
-<option value="0.75">0.75× C-Mount</option>
-<option value="0.7">0.7× C-Mount</option>
-<option value="0.63" selected>0.63× C-Mount</option>
-<option value="0.5">0.5× C-Mount</option>
-<option value="0.35">0.35× Large Format</option>
-<option value="0">1× Direct Projection</option>
+    <option value="1">1× C-Mount</option>
+    <option value="0.75">0.75× C-Mount</option>
+    <option value="0.7">0.7× C-Mount</option>
+    <option value="0.63" selected>0.63× C-Mount</option>
+    <option value="0.5">0.5× C-Mount</option>
+    <option value="0.35">0.35× Large Format</option>
+    <option value="0">Direct Projection</option>
 </select>
-</div>
-
-<div>
-<label>Pixel Size (µm)</label>
-<input type="number" id="pixelSize" value="3.45" step="0.01">
 </div>
 
 </div>
@@ -217,7 +235,7 @@ Calculate Compatibility
 </button>
 
 <div id="result" class="result">
-Select a sensor, adapter and objective then click Calculate.
+Choose a sensor, C-mount and objective, then click Calculate.
 </div>
 
 <div class="diagram">
@@ -236,7 +254,7 @@ stroke-width="3"/>
 <rect
 id="sensorRect"
 x="100"
-y="100"
+y="110"
 width="100"
 height="80"
 fill="rgba(186,43,43,0.35)"
@@ -247,222 +265,153 @@ stroke-width="2"/>
 
 </div>
 
+<div class="footer">
+GT Vision Microscopy Compatibility Calculator
+</div>
+
 </div>
 
 <script>
 
 function updateSensor(){
 
-    const sensor=document.getElementById("sensor").value;
+    const sensor = document.getElementById("sensor").value;
 
-    if(sensor==="custom"){
-        document.getElementById("sensorWidth").value="";
-        document.getElementById("sensorHeight").value="";
+    if(sensor === "custom"){
+        document.getElementById("sensorWidth").value = "";
+        document.getElementById("sensorHeight").value = "";
         return;
     }
 
-    const dims=sensor.split(",");
+    const dims = sensor.split(",");
 
-    document.getElementById("sensorWidth").value=dims[0];
-    document.getElementById("sensorHeight").value=dims[1];
+    document.getElementById("sensorWidth").value = dims[0];
+    document.getElementById("sensorHeight").value = dims[1];
 }
 
 function calculate(){
 
-    const width=parseFloat(
-        document.getElementById("sensorWidth").value);
+    const width =
+        parseFloat(document.getElementById("sensorWidth").value);
 
-    const height=parseFloat(
-        document.getElementById("sensorHeight").value);
+    const height =
+        parseFloat(document.getElementById("sensorHeight").value);
 
-    const objective=parseFloat(
-        document.getElementById("objective").value);
+    const objective =
+        parseFloat(document.getElementById("objective").value);
 
-    const pixelSize=parseFloat(
-        document.getElementById("pixelSize").value);
+    const cMountFactor =
+        parseFloat(document.getElementById("cmount").value);
 
-    const cMount=
-        document.getElementById("cmount").value;
+    const cMountText =
+        document.getElementById("cmount").options[
+        document.getElementById("cmount").selectedIndex
+        ].text;
 
-    const cMountText=
-        document.getElementById("cmount")
-        .options[
-        document.getElementById("cmount")
-        .selectedIndex].text;
-
-    if(!width || !height){
-        alert("Please enter valid sensor dimensions.");
+    if(!width || !height || !objective){
+        alert("Please enter valid values.");
         return;
     }
 
-    const sensorDiagonal=
-        Math.sqrt(width*width+height*height);
+    const sensorDiagonal =
+        Math.sqrt(width * width + height * height);
 
-    const adapterImageCircles={
-        "1":22.0,
-        "0.75":16.5,
-        "0.7":15.4,
-        "0.63":13.9,
-        "0.5":11.0,
-        "0.35":7.7
-    };
+    const fieldNumber = 22;
 
     let imageCircle;
 
-    if(cMount==="0")
-        imageCircle=22;
-    else
-        imageCircle=adapterImageCircles[cMount];
+    if(cMountFactor === 0){
+        imageCircle = fieldNumber / objective;
+    } else {
+        imageCircle = (fieldNumber / objective) * cMountFactor;
+    }
 
-    const sensorUsage=
-        (sensorDiagonal/imageCircle)*100;
+    const coverage =
+        (sensorDiagonal / imageCircle) * 100;
 
     let status;
-    let colour;
     let fitMessage;
+    let colour;
 
-    if(sensorUsage<70){
-        status="Undersized Sensor";
-        fitMessage="Image circle significantly larger than sensor";
-        colour="#F5A623";
+    if(coverage < 60){
+        status = "Undersized";
+        fitMessage = "Adapter image circle larger than required";
+        colour = "#F5A623";
     }
-    else if(sensorUsage<=90){
-        status="Excellent Match";
-        fitMessage="Optimal sensor coverage";
-        colour="#4CAF50";
-    }
-    else if(sensorUsage<=100){
-        status="Near Limit";
-        fitMessage="Close to image circle boundary";
-        colour="#F5A623";
+    else if(coverage <= 95){
+        status = "Optimal";
+        fitMessage = "Good match";
+        colour = "#4CAF50";
     }
     else{
-        status="Vignetting Risk";
-        fitMessage="Sensor exceeds image circle";
-        colour="#D32F2F";
+        status = "Vignetting Risk";
+        fitMessage = "Sensor may exceed image circle";
+        colour = "#D32F2F";
     }
-
-    let format;
-
-    if(sensorDiagonal<6.5)
-        format='1/3"';
-    else if(sensorDiagonal<8.5)
-        format='1/2"';
-    else if(sensorDiagonal<11.5)
-        format='2/3"';
-    else if(sensorDiagonal<16.5)
-        format='1"';
-    else if(sensorDiagonal<22.5)
-        format='4/3"';
-    else if(sensorDiagonal<30)
-        format='APS-C';
-    else
-        format='Full Frame';
-
-    let adapterRecommendation;
-
-    if(sensorDiagonal<=8)
-        adapterRecommendation="0.5×";
-    else if(sensorDiagonal<=11)
-        adapterRecommendation="0.63×";
-    else if(sensorDiagonal<=16)
-        adapterRecommendation="0.7×";
-    else if(sensorDiagonal<=22)
-        adapterRecommendation="1×";
-    else
-        adapterRecommendation="Large Format";
-
-    const micronPerPixel=
-        pixelSize/objective;
-
-    const fieldOfView=
-        imageCircle/objective;
 
     let objectiveRecommendation;
 
-    if(sensorDiagonal<8)
-        objectiveRecommendation="2×";
-    else if(sensorDiagonal<12)
-        objectiveRecommendation="5×";
-    else if(sensorDiagonal<18)
-        objectiveRecommendation="10×";
-    else if(sensorDiagonal<30)
-        objectiveRecommendation="20×";
+    if(sensorDiagonal < 8)
+        objectiveRecommendation = "2× Objective";
+    else if(sensorDiagonal < 12)
+        objectiveRecommendation = "5× Objective";
+    else if(sensorDiagonal < 18)
+        objectiveRecommendation = "10× Objective";
+    else if(sensorDiagonal < 30)
+        objectiveRecommendation = "20× Objective";
     else
-        objectiveRecommendation="Telecentric";
+        objectiveRecommendation = "Telecentric Lens";
 
-    document.getElementById("result").innerHTML=`
+    document.getElementById("result").innerHTML = `
+        <strong>Sensor Diagonal:</strong> ${sensorDiagonal.toFixed(2)} mm<br>
 
-    <strong>Sensor Format:</strong> ${format}<br>
+        <strong>Selected C-Mount:</strong> ${cMountText}<br>
 
-    <strong>Sensor Diagonal:</strong>
-    ${sensorDiagonal.toFixed(2)} mm<br>
+        <strong>Effective Image Circle:</strong> ${imageCircle.toFixed(2)} mm<br>
 
-    <strong>Selected Adapter:</strong>
-    ${cMountText}<br>
+        <strong>Coverage:</strong> ${coverage.toFixed(1)}%<br>
 
-    <strong>Recommended Adapter:</strong>
-    ${adapterRecommendation}<br>
+        <strong>C-Mount Assessment:</strong> ${fitMessage}<br>
 
-    <strong>Adapter Image Circle:</strong>
-    ${imageCircle.toFixed(2)} mm<br>
+        <strong>Recommended Objective:</strong> ${objectiveRecommendation}<br>
 
-    <strong>Sensor Utilisation:</strong>
-    ${sensorUsage.toFixed(1)} %<br>
-
-    <strong>Objective:</strong>
-    ${objective}×<br>
-
-    <strong>Approx. Field of View:</strong>
-    ${fieldOfView.toFixed(2)} mm<br>
-
-    <strong>Sampling:</strong>
-    ${micronPerPixel.toFixed(2)} µm/pixel<br>
-
-    <strong>Recommended Objective:</strong>
-    ${objectiveRecommendation}<br>
-
-    <strong>Assessment:</strong>
-    ${fitMessage}<br>
-
-    <strong>Status:</strong>
-    ${status}
-    <span class="light"
-          style="background:${colour};"></span>
-
+        <strong>Status:</strong> ${status}
+        <span class="light" style="background:${colour};"></span>
     `;
 
-    drawSensor(width,height,imageCircle);
+    drawSensor(width,height);
 }
 
-function drawSensor(width,height,imageCircle){
+function drawSensor(width,height){
 
-    const rect=
+    const rect =
         document.getElementById("sensorRect");
 
-    const circle=
-        document.getElementById("fieldCircle");
+    const scale = 5;
 
-    const circleRadius=
-        (imageCircle/22)*120;
+    let w = width * scale;
+    let h = height * scale;
 
-    circle.setAttribute("r",circleRadius);
+    if(w > 220){
 
-    let w=width*5;
-    let h=height*5;
+        const factor = 220 / w;
 
-    if(w>220){
-
-        const scale=220/w;
-
-        w*=scale;
-        h*=scale;
+        w *= factor;
+        h *= factor;
     }
 
     rect.setAttribute("width",w);
     rect.setAttribute("height",h);
-    rect.setAttribute("x",150-(w/2));
-    rect.setAttribute("y",150-(h/2));
+
+    rect.setAttribute(
+        "x",
+        150 - (w / 2)
+    );
+
+    rect.setAttribute(
+        "y",
+        150 - (h / 2)
+    );
 }
 
 updateSensor();
