@@ -3,87 +3,157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GT Vision C-Mount calculator </title>
+<title>GT Vision Sensor, C-Mount & Objective Calculator</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f5f7fa;
-    padding: 30px;
+:root{
+    --gt-red:#BA2B2B;
+    --gt-red-dark:#9F2323;
+    --gt-red-light:#D45050;
+    --gt-white:#FFFFFF;
+    --gt-bg:#F2F2F2;
+    --gt-grey:#666666;
+    --gt-black:#333333;
 }
 
-.container {
-    max-width: 850px;
-    margin: auto;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+*{
+    box-sizing:border-box;
 }
 
-h1 {
-    color: #00A3E0;
-    text-align: center;
-    margin-bottom: 25px;
+body{
+    font-family:"Segoe UI",Arial,sans-serif;
+    background:var(--gt-bg);
+    padding:30px;
+    color:var(--gt-black);
+    margin:0;
 }
 
-label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.12);
+    border-top:8px solid var(--gt-red);
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.logo h1{
+    font-size:48px;
+    margin:0;
+    color:var(--gt-red);
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.logo span{
+    border:4px solid var(--gt-red);
+    border-radius:10px;
+    padding:0 10px;
+    margin-right:6px;
+    display:inline-block;
+}
+
+.subtitle{
+    text-align:center;
+    color:var(--gt-grey);
+    margin-bottom:25px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+@media(max-width:700px){
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+label{
+    display:block;
+    margin-bottom:5px;
+    color:var(--gt-red);
+    font-weight:600;
 }
 
 select,
-input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
+input{
+    width:100%;
+    padding:10px;
+    border:2px solid #dddddd;
+    border-radius:8px;
+    transition:0.2s;
 }
 
-button {
-    width: 100%;
-    margin-top: 20px;
-    padding: 12px;
-    background: #00A3E0;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
+select:focus,
+input:focus{
+    outline:none;
+    border-color:var(--gt-red);
+    box-shadow:0 0 8px rgba(186,43,43,0.2);
 }
 
-button:hover {
-    background: #0088be;
+button{
+    width:100%;
+    margin-top:25px;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:var(--gt-red);
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
 }
 
-.result {
-    margin-top: 25px;
-    padding: 20px;
-    background: #f7f7f7;
-    border-radius: 8px;
-    font-size: 17px;
+button:hover{
+    background:var(--gt-red-dark);
 }
 
-.light {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-left: 8px;
-    border: 1px solid #666;
-    vertical-align: middle;
+.result{
+    margin-top:25px;
+    background:#fafafa;
+    border-left:6px solid var(--gt-red);
+    border-radius:10px;
+    padding:20px;
+    line-height:1.9;
 }
 
-.diagram {
-    text-align: center;
-    margin-top: 25px;
+.diagram{
+    text-align:center;
+    margin-top:30px;
+    padding:15px;
+    background:#fafafa;
+    border-radius:10px;
 }
 
-svg {
-    max-width: 320px;
+.light{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    display:inline-block;
+    margin-left:8px;
+    border:1px solid #999;
+    vertical-align:middle;
+}
+
+.footer{
+    text-align:center;
+    margin-top:20px;
+    color:var(--gt-grey);
+    font-size:12px;
+}
+
+svg{
+    max-width:320px;
 }
 </style>
 </head>
@@ -92,8 +162,17 @@ svg {
 
 <div class="container">
 
-<h1>GT Vision Sensor → C-Mount → Objective Calculator</h1>
+<div class="logo">
+    <h1><span>GT</span>VISION</h1>
+</div>
 
+<div class="subtitle">
+    Sensor • C-Mount • Objective Compatibility Calculator
+</div>
+
+<div class="grid">
+
+<div>
 <label>Sensor</label>
 <select id="sensor" onchange="updateSensor()">
     <option value="4.8,3.6">1/3" Sensor</option>
@@ -109,24 +188,9 @@ svg {
     <option value="36,24">Full Frame</option>
     <option value="custom">Custom Sensor</option>
 </select>
+</div>
 
-<label>Sensor Width (mm)</label>
-<input type="number" id="sensorWidth" step="0.01">
-
-<label>Sensor Height (mm)</label>
-<input type="number" id="sensorHeight" step="0.01">
-
-<label>C-Mount Adapter</label>
-<select id="cmount">
-    <option value="1">1× C-Mount</option>
-    <option value="0.75">0.75× C-Mount</option>
-    <option value="0.7">0.7× C-Mount</option>
-    <option value="0.63" selected>0.63× C-Mount</option>
-    <option value="0.5">0.5× C-Mount</option>
-    <option value="0.35">0.35× Large Format</option>
-    <option value="0">Direct Projection</option>
-</select>
-
+<div>
 <label>Objective Magnification</label>
 <select id="objective">
     <option value="0.5">0.5×</option>
@@ -139,45 +203,81 @@ svg {
     <option value="60">60×</option>
     <option value="100">100×</option>
 </select>
+</div>
 
-<button onclick="calculate()">Calculate</button>
+<div>
+<label>Sensor Width (mm)</label>
+<input type="number" id="sensorWidth" step="0.01">
+</div>
+
+<div>
+<label>Sensor Height (mm)</label>
+<input type="number" id="sensorHeight" step="0.01">
+</div>
+
+<div>
+<label>C-Mount Adapter</label>
+<select id="cmount">
+    <option value="1">1× C-Mount</option>
+    <option value="0.75">0.75× C-Mount</option>
+    <option value="0.7">0.7× C-Mount</option>
+    <option value="0.63" selected>0.63× C-Mount</option>
+    <option value="0.5">0.5× C-Mount</option>
+    <option value="0.35">0.35× Large Format</option>
+    <option value="0">Direct Projection</option>
+</select>
+</div>
+
+</div>
+
+<button onclick="calculate()">
+Calculate Compatibility
+</button>
 
 <div id="result" class="result">
-Choose a sensor, C-mount and objective, then press Calculate.
+Choose a sensor, C-mount and objective, then click Calculate.
 </div>
 
 <div class="diagram">
+
 <svg viewBox="0 0 300 300">
 
-    <circle id="fieldCircle"
-        cx="150"
-        cy="150"
-        r="120"
-        fill="#d9f2ff"
-        stroke="#00A3E0"
-        stroke-width="3"/>
+<circle
+id="fieldCircle"
+cx="150"
+cy="150"
+r="120"
+fill="#FFF5F5"
+stroke="#BA2B2B"
+stroke-width="3"/>
 
-    <rect id="sensorRect"
-        x="100"
-        y="110"
-        width="100"
-        height="80"
-        fill="rgba(255,0,0,0.35)"
-        stroke="#cc0000"
-        stroke-width="2"/>
+<rect
+id="sensorRect"
+x="100"
+y="110"
+width="100"
+height="80"
+fill="rgba(186,43,43,0.35)"
+stroke="#BA2B2B"
+stroke-width="2"/>
 
 </svg>
+
+</div>
+
+<div class="footer">
+GT Vision Microscopy Compatibility Calculator
 </div>
 
 </div>
 
 <script>
 
-function updateSensor() {
+function updateSensor(){
 
     const sensor = document.getElementById("sensor").value;
 
-    if (sensor === "custom") {
+    if(sensor === "custom"){
         document.getElementById("sensorWidth").value = "";
         document.getElementById("sensorHeight").value = "";
         return;
@@ -189,7 +289,7 @@ function updateSensor() {
     document.getElementById("sensorHeight").value = dims[1];
 }
 
-function calculate() {
+function calculate(){
 
     const width =
         parseFloat(document.getElementById("sensorWidth").value);
@@ -208,7 +308,7 @@ function calculate() {
         document.getElementById("cmount").selectedIndex
         ].text;
 
-    if (!width || !height || !objective) {
+    if(!width || !height || !objective){
         alert("Please enter valid values.");
         return;
     }
@@ -220,7 +320,7 @@ function calculate() {
 
     let imageCircle;
 
-    if (cMountFactor === 0) {
+    if(cMountFactor === 0){
         imageCircle = fieldNumber / objective;
     } else {
         imageCircle = (fieldNumber / objective) * cMountFactor;
@@ -230,86 +330,87 @@ function calculate() {
         (sensorDiagonal / imageCircle) * 100;
 
     let status;
-    let colour;
     let fitMessage;
+    let colour;
 
-    if (coverage < 60) {
-        status = "Sensor Undersized";
-        fitMessage = "Adapter not fully utilised";
-        colour = "orange";
+    if(coverage < 60){
+        status = "Undersized";
+        fitMessage = "Adapter image circle larger than required";
+        colour = "#F5A623";
     }
-    else if (coverage <= 95) {
+    else if(coverage <= 95){
         status = "Optimal";
-        fitMessage = "Good optical match";
-        colour = "green";
+        fitMessage = "Good match";
+        colour = "#4CAF50";
     }
-    else {
+    else{
         status = "Vignetting Risk";
         fitMessage = "Sensor may exceed image circle";
-        colour = "red";
+        colour = "#D32F2F";
     }
 
     let objectiveRecommendation;
 
-    if (sensorDiagonal < 8)
+    if(sensorDiagonal < 8)
         objectiveRecommendation = "2× Objective";
-    else if (sensorDiagonal < 12)
+    else if(sensorDiagonal < 12)
         objectiveRecommendation = "5× Objective";
-    else if (sensorDiagonal < 18)
+    else if(sensorDiagonal < 18)
         objectiveRecommendation = "10× Objective";
-    else if (sensorDiagonal < 30)
+    else if(sensorDiagonal < 30)
         objectiveRecommendation = "20× Objective";
     else
         objectiveRecommendation = "Telecentric Lens";
 
     document.getElementById("result").innerHTML = `
-        <strong>Sensor Diagonal:</strong> ${sensorDiagonal.toFixed(2)} mm<br><br>
+        <strong>Sensor Diagonal:</strong> ${sensorDiagonal.toFixed(2)} mm<br>
 
-        <strong>Effective Image Circle:</strong> ${imageCircle.toFixed(2)} mm<br><br>
+        <strong>Selected C-Mount:</strong> ${cMountText}<br>
 
-        <strong>Coverage:</strong> ${coverage.toFixed(1)} %<br><br>
+        <strong>Effective Image Circle:</strong> ${imageCircle.toFixed(2)} mm<br>
 
-        <strong>Selected C-Mount:</strong> ${cMountText}<br><br>
+        <strong>Coverage:</strong> ${coverage.toFixed(1)}%<br>
 
-        <strong>C-Mount Assessment:</strong> ${fitMessage}<br><br>
+        <strong>C-Mount Assessment:</strong> ${fitMessage}<br>
 
-        <strong>Recommended Objective:</strong> ${objectiveRecommendation}<br><br>
+        <strong>Recommended Objective:</strong> ${objectiveRecommendation}<br>
 
         <strong>Status:</strong> ${status}
         <span class="light" style="background:${colour};"></span>
     `;
 
-    drawSensor(width, height);
+    drawSensor(width,height);
 }
 
-function drawSensor(width, height) {
+function drawSensor(width,height){
 
-    const rect = document.getElementById("sensorRect");
+    const rect =
+        document.getElementById("sensorRect");
 
     const scale = 5;
 
-    let displayWidth = width * scale;
-    let displayHeight = height * scale;
+    let w = width * scale;
+    let h = height * scale;
 
-    if (displayWidth > 220) {
+    if(w > 220){
 
-        const factor = 220 / displayWidth;
+        const factor = 220 / w;
 
-        displayWidth *= factor;
-        displayHeight *= factor;
+        w *= factor;
+        h *= factor;
     }
 
-    rect.setAttribute("width", displayWidth);
-    rect.setAttribute("height", displayHeight);
+    rect.setAttribute("width",w);
+    rect.setAttribute("height",h);
 
     rect.setAttribute(
         "x",
-        150 - displayWidth / 2
+        150 - (w / 2)
     );
 
     rect.setAttribute(
         "y",
-        150 - displayHeight / 2
+        150 - (h / 2)
     );
 }
 
